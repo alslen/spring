@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+		
+<context:component-scan base-package="com.test2.controller"/>
+<context:component-scan base-package="com.person2"/> <!-- com.person2하위에 있는 모든 것들을 다 스캔하겠다는 의미 -->
+
+<!-- db설정 -->
+<bean id="ds" class="org.springframework.jndi.JndiObjectFactoryBean">
+	<property name="jndiName">
+		<value>jdbc/spring</value> <!-- context.xml에 만들었음, context.xml를 추가해야함 -->
+	</property>
+	<property name="resourceRef" value="true"></property>
+</bean>
+
+<!-- spring jdbc template : ds와 연결시켜줘야함 -->
+<bean id="template" class="org.springframework.jdbc.core.JdbcTemplate">
+	<property name="dataSource" ref="ds"></property>
+</bean>
+
+<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<property name="prefix" value="WEB-INF/jsp/"></property> <!-- result앞에 WEB-INF/jsp/이 붙고-->
+	<property name="suffix" value=".jsp"></property> <!--뒤에 .jsp가 붙는다. -->
+</bean>
+
+
+</beans>
