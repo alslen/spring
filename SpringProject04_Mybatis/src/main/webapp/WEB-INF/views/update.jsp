@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +9,7 @@
 <script src="https://code.jquery.com/jquery-3.6.1.js"></script> 
 </head>
 <body>
-<h2>개인 정보 수정</h2>
+<h2>Person Mybatis 수정하기</h2>
 <form action="update" method="post">
 		이름 : <input type="text" name="name" value="${person.name}"> <br />
 		아이디 : <input type="text" name="id" value="${person.id }" readonly="readonly"> <br /> 

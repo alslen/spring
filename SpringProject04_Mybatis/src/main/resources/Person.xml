@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.myspring.Person"> <!-- 보통 namespace는 경로를 써줌-->
+ 
+ <sql id="search"> <!-- 공통된 부분을 sql부분에서 선언함 -->
+ 			<where> <!-- 필요하면 붙고 필요없으면 안붙는다. -->
+	 			<if test="word!=null and field=='name'" >
+	 				name like '%${word}%'
+	 			</if>
+	 			<if test="word!=null and field=='job'" >
+	 				job like CONCAT('%',#{word},'%')
+	 			</if>
+ 			</where>
+ </sql>
+ 
+ 	<!-- sql을 만듦 -->
+ 	<!-- 추가 -->
+ 	<insert id="insertPerson" parameterType="com.myspring.vo.PersonVO"> <!-- 값을 넣어줄때는 parameterType을 사용 -->
+ 		insert into person values(#{id},#{name},#{password},#{gender},#{job})
+ 	</insert>
+ 	<!-- 전체보기 -->
+ 	<select id="listPerson" resultType="com.myspring.vo.PersonVO"> <!-- 값을 반환할때는 resultType사용  -->
+ 		select * from person
+ 	</select>
+ 	
+ 	<!-- 상세보기 -->
+ 	<!-- 값을 전달하는 Type이 String이고, 반환하는 Type이 PersonVO이다. -->
+ 	<select id="viewPerson" parameterType="String" resultType="com.myspring.vo.PersonVO">
+ 		select * from person where id=#{id} <!-- 값을 전달하는 것과 값을 반환하는 것 둘다 있어야함 -->
+ 	</select>
+ 	
+ 	<!-- 수정 -->
+ 	<update id="updatePerson" parameterType="com.myspring.vo.PersonVO">
+ 		update person set name=#{name}, password=#{password}, gender=#{gender},job=#{job} where id=#{id}
+ 	</update>
+ 	
+ 	<!-- 삭제 -->
+ 	<delete id="deletePerson" parameterType="String">
+ 		delete from person where id=#{id} <!-- #{id}은 PreparedStatement라고 생각해라. -->
+ 	</delete>
+ 	
+ 	<!-- 개수 -->
+ 	<!-- resultType에는 클래스형을 써줌 -->
+ 	<select id="countPerson" resultType="int"> <!-- int는 Wrapper타입이라서 자동으로 클래스형으로 바꿔줌 -->
+ 		select count(*) from person
+ 	</select>
+ 	
+ 	<!-- 검색 전체보기 -->
+ 	<select id="searchPerson" resultType="com.myspring.vo.PersonVO" parameterType="java.util.Map"> <!-- Map의 인터페이스를 구현한게 HashMap임 -->
+ 		select * from person
+ 		<include refid="search"/>
+ 	</select>
+ 	
+ 	<!-- 검색 개수 -->
+ 	<select id="searchCount" resultType="int" parameterType="java.util.Map">
+ 		select count(*) from person
+ 		<include refid="search"/> <!-- id값으로 불러야함 -->
+ 	</select>
+ </mapper>
