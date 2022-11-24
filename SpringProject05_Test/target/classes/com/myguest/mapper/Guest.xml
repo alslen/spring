@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.myguest.mapper.Guest"> <!-- namespace는 이름이여서 .으로접근 -->
+ 
+ <sql id="search"> <!-- 공통된 부분을 sql로 뺌 -->
+ 	<where> <!-- 다이나믹 sql -->
+ 		<if test="word!=null and field=='name'">
+ 			name like CONCAT('%',#{word},'%')
+ 		</if>
+ 		<if test="word!=null and field=='content'">
+ 			content like CONCAT('%',#{word},'%')
+ 		</if>
+ 	</where>
+ </sql>
+ 
+ <!-- 추가 -->
+ <insert id="insertGuest" parameterType="com.myspring.model.GuestDTO">
+ 	insert into guest(name,content,grade,created,ipaddr) values(#{name},#{content},#{grade},now(),#{ipaddr})
+ </insert>
+ 
+ <!-- 전체보기 -->
+ <select id="listGuest" resultType="com.myspring.model.GuestDTO" parameterType="java.util.Map">
+ 	select * from guest
+ 	<include refid="search"/>
+ </select>
+ 
+ <!-- 카운트-->
+ <select id="countGuest" resultType="int">
+ 	select count(*) from guest
+ 	<include refid="search"/>
+ </select>
+ 
+ </mapper>
