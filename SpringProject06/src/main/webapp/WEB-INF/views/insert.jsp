@@ -9,7 +9,7 @@
 
 <script>
 $(function() {
-	loadData();  // 시작하자마자 DB에 들어있는 값들을 부르기 위해서 
+	loadData("","");  // 시작하자마자 DB에 들어있는 값들을 부르기 위해서 
 	$("#send").click(function(){
 		var postString = {
 			"name" : $("#name").val(),
@@ -23,7 +23,7 @@ $(function() {
 			data:JSON.stringify(postString),  // stringify : JSON형태의 문자열로 바꿔줌
 			success:function(resp){
 				alert(resp)
-				loadData();
+				loadData("","");
 			},
 			beforeSend:showRequest,
 			error:function(e) {
@@ -31,19 +31,25 @@ $(function() {
 			}
 		})  // ajax
 	})  // send
+	
+	$("#btnSearch").click(function(){
+		loadData($("#field").val(),$("#word").val());
+	})
 })  //document
 
-function loadData(){
+function loadData(field, word){
 	$.getJSON(
 			"list",
+			{"field":field, "word":word},  // 값을 list에 넘겨줘야함
 			function(resp) {
 				var str="<br>";
 				$("#cntDiv").text("개수 : "+resp.count)
 				$.each(resp.arr, function(key,val){
-					str += val.num+" "
-					str += "<a href='javascript:fview("+val.num+")'>"+val.name+"</a>"
-					str += val.content+" "
-					str += val.grade+"<br>"
+					str += val.num+"  "
+					str += "<a href='javascript:fview("+val.num+")'>"+val.name+"</a>  "
+					str += val.content+"  "
+					str += val.grade+"  "
+					str += "<a href='javascript:fdelete("+val.num+")'>삭제</a><br/>"  // 자바스크립트를 부를려면 javascript를 입력해야함.
 				})
 				$("#result").html(str)
 				
@@ -51,6 +57,25 @@ function loadData(){
 	)  //getJSON
 }  //loadData
 
+// 삭제
+function fdelete(num){
+	$.ajax({
+		type:"DELETE",
+		url : "delete/"+num,  // delete / 숫자 => restful
+		success:function(resp){
+			if(resp=="success") {
+				alert("삭제성공")
+				loadData("","");
+			}
+		},
+		error : function(e){
+			alert("삭제실패 : " + e)
+		}
+	})  //ajax
+}  // fdelete
+
+
+// 상세보기
 function fview(num) {
 	$.getJSON("view", {"num" : num}, function(val) {
 		var str="";
@@ -62,6 +87,7 @@ function fview(num) {
 	})
 } 
 
+// 값을 입력하지 않았을 때
 function showRequest(){
 	if($("#name").val()==""){
 		alert("글쓴이를 입력하세요")
@@ -106,6 +132,14 @@ function showRequest(){
 		<td colspan="2"><input type="button" value="입력" id="send"></td>
 	</tr>
 	</table>
+	<div align="center">
+		<select name="field" id="field">
+			<option value="name">이름</option>
+			<option value="content">내용</option>
+		</select>
+		<input type="text" name="word" id="word">
+		<input type="button" value="찾기" id="btnSearch">
+	</div>
 </form>
 <hr>
 

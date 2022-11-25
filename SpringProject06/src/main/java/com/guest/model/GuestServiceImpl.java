@@ -32,9 +32,10 @@ public class GuestServiceImpl implements GuestService{
 		
 	}
 
+	// ªË¡¶
 	@Override
 	public void guestDelete(int num) {
-		
+		repository.dao_guestDelete(num);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import com.guest.mapper.GuestMapper;
 public class GuestRepositoryImpl implements GuestRepository{
 
 	@Autowired
-	private GuestMapper mapper;  //root-
+	private GuestMapper mapper; 
 	@Override
 	public void dao_guestInsert(GuestVO person) {
 		mapper.insert(person);  //  // mapper의 메소드를 불러줌
@@ -35,7 +35,7 @@ public class GuestRepositoryImpl implements GuestRepository{
 
 	@Override
 	public void dao_guestDelete(int num) {
-		
+		mapper.delete(num);
 	}
 
 	@Override
