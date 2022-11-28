@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.myboard.mapper.CommentMapper">
+ <!-- 댓글 추가 -->
+ 	<insert id="insert">
+ 		insert into commentboard(userid,content,regdate,bnum) values('aa',#{content},now(),#{bnum})
+ 	</insert>
+ 	
+ <!-- 댓글 전체보기 -->
+ 	<select id="getList" resultType="com.myboard.dto.CommentDTO" parameterType="int"> <!--id값은 반드시 메서드이름을 적어둠.  -->
+ 		select * from commentboard where bnum=#{bnum}
+ 	</select>
+ 	
+ 	<delete id="delete" parameterType="int">
+ 		delete from commentboard where cnum=#{cnum}
+ 	</delete>
+ </mapper>

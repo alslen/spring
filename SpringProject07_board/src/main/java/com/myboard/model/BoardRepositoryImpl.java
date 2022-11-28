@@ -28,16 +28,19 @@ public class BoardRepositoryImpl implements BoardRepository{
 		return bmapper.list(hm);
 	}
 
+	// 상세보기
 	@Override
 	public BoardDTO dao_findByNum(int num) {
 		return bmapper.view(num);
 	}
 
+	// 수정
 	@Override
 	public void dao_update(BoardDTO board) {
 		bmapper.update(board);
 	}
 
+	// 삭제
 	@Override
 	public void dao_delete(int num) {
 		bmapper.delete(num);
@@ -48,6 +51,13 @@ public class BoardRepositoryImpl implements BoardRepository{
 	public int dao_getCount(HashMap<String, Object> hm) {
 		
 		return bmapper.count(hm);
+	}
+
+	// 댓글 수 
+	@Override
+	public void dao_upReadCount(int num) {
+
+		bmapper.upReadCount(num);
 	}
 
 }

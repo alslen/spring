@@ -18,5 +18,7 @@ public interface BoardRepository {
 		public void dao_delete(int num);
 		// 개수
 		public int dao_getCount(HashMap<String, Object> hm);
+		// 조회수
+		public void dao_upReadCount(int num);
 
 }

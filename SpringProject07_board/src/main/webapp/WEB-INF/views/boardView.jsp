@@ -11,6 +11,7 @@
 </div>
 
 <div class = "container">
+<input type="hidden" name="num" id="num" value="${board.num}"> <!-- num값을 넘겨줘야함. -->
 	<table class="table">
 	<tr>
 		<th>번호</th>
@@ -42,15 +43,89 @@
 		</td>
 	</tr>
 	</table>
+	
+	<br>
+	<br>
+	<div align="center">
+		<textarea rows="3" cols="50" id="msg"></textarea>
+		<button type="button" class="btn btn-primary" id="btnComment">댓글쓰기</button>
+	</div>
+	<hr/>
+	<div id="replyResult"></div>
+	
 </div>
 
 <script>
+var init = function(){
+	$.ajax({
+		type:'get',
+		url : '/app07/reply/commentList/${board.num}'
+	/*	url:'/app07/reply/commentList',
+		data:{"bnum" : $("#num").val()} */
+	})
+	.done(function(resp){
+		var str = "";
+		$.each(resp, function(key,val){
+			str += val.userid+" "
+			str += val.content+" "
+			str += val.regdate+" "
+			str += "<a href='javascript:fdel("+val.cnum+")'>삭제</a><br/>"
+		})  // each
+		$("#replyResult").html(str);
+	})  // done
+	.fail(function(e){
+		alert("실패")
+	})  // fail
+}  // init
+
+// 댓글삭제
+function fdel(cnum) {
+	$.ajax({
+		type:"Delete",
+		url:"/app07/reply/delete/"+cnum
+	})
+	.done(function(resp){
+		alert(resp+"번 글 삭제 완료")
+		init()
+	})
+	.fail(function(e){
+		alert("댓글 삭제 실패 : "+e)
+	})  // ajax
+}  // fdel
+
+// 댓글쓰기
+$("#btnComment").click(function(){
+	if($("#msg").val()==""){
+		alert("댓글 입력하세요");
+		return;
+	}
+	data = {
+			"bnum": $("#num").val(),  // num의 값을 bnum에 담음
+			"content":$("#msg").val()
+	}
+	$.ajax({
+		type:"post",
+		url:'/app07/reply/commentInsert',
+		contentType:"application/json;charset=utf-8",
+		data:JSON.stringify(data),  // JSON형태로 값을 전달
+		success : function(resp){
+			if(resp=="success")	alert("댓글 추가 성공")
+			init();
+		},
+		error:function(){
+			alert("댓글 추가 실패")
+		}
+	})  // ajax
+})  // btnComment
+
+
 // 수정폼
 $("#btnUpdate").click(function() {
 	if(!confirm('정말 수정할까요?'))  // false
 		return false;
 	location.href="/app07/update/${board.num}";
 })
+
 
 // 삭제
 $("#btnDelete").click(function() {
@@ -71,6 +146,8 @@ $("#btnDelete").click(function() {
 		}
 	})  // ajax
 })  // btnDelete
+
+init();  // init함수는 댓글을 쓰든 안쓰든 보여야하기 때문에 선언해줌.
 
 </script>
 	
