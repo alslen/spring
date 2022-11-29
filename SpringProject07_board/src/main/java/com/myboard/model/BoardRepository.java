@@ -4,21 +4,29 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.myboard.dto.BoardDTO;
+import com.myboard.dto.FileBoardDTO;
+
+
 
 public interface BoardRepository {
-		// Ãß°¡
+		// ì¶”ê°€
 		public void dao_insert(BoardDTO board);
-		// ÀüÃ¼º¸±â
+		// ì „ì²´ë³´ê¸°
 		public List<BoardDTO> dao_findeAll(HashMap<String, Object> hm);
-		// »ó¼¼º¸±â
+		// ìƒì„¸ë³´ê¸°
 		public BoardDTO dao_findByNum(int num);
-		// ¼öÁ¤
+		// ìˆ˜ì •
 		public void dao_update(BoardDTO board);
-		// »èÁ¦
+		// ì‚­ì œ
 		public void dao_delete(int num);
-		// °³¼ö
+		// ê°œìˆ˜
 		public int dao_getCount(HashMap<String, Object> hm);
-		// Á¶È¸¼ö
+		// ì¡°íšŒìˆ˜
 		public void dao_upReadCount(int num);
+		
+		// íŒŒì¼ ì—…ë¡œë“œ ì¶”ê°€
+		public void dao_fileInsert(FileBoardDTO board);
+		// íŒŒì¼ ë¦¬ìŠ¤íŠ¸
+		public List<FileBoardDTO> dao_fileList();
 
 }

@@ -6,15 +6,17 @@ import org.apache.ibatis.annotations.Select;
 
 import com.myboard.dto.CommentDTO;
 
+
+
 public interface CommentMapper {
 
-	// ´ñ±Û Ãß°¡
+	// ëŒ“ê¸€ ì¶”ê°€
 	public void insert(CommentDTO comment);
 	
-	// ´ñ±Û ÀüÃ¼º¸±â
+	// ëŒ“ê¸€ ì „ì²´ë³´ê¸°
 	public List<CommentDTO> getList(int bnum);
 	
-	// ´ñ±Û»èÁ¦
+	// ëŒ“ê¸€ ì‚­ì œ
 	public void delete(int cnum);
 	
 	//read

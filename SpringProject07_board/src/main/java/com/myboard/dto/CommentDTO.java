@@ -8,12 +8,14 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import lombok.Getter;
 import lombok.Setter;
 
+
+
 @Getter @Setter
 public class CommentDTO {
 	private int cnum;
 	private String userid;
 	private String content;
-	@JsonFormat(shape=Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul") // @JsonFormat : JSON ÀÀ´ä°ªÀÇ Çü½ÄÀ» ÁöÁ¤ÇÒ ¶§ »ç¿ëÇÑ´Ù.
-	private Date regdate;  // regdateÀÇ °ªÀº yyyy-MM-ddÀÌ ÇüÅÂ·Î ³ªÅ¸³»ÁÖ±â À§ÇØ »ç¿ë
-	private int bnum;  // boardÅ×ÀÌºí°ú ¿¬°ü ¿Ü·¡Å°
+	@JsonFormat(shape=Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul") // @JsonFormat : JSON ì‘ë‹µê°’ì˜ í˜•ì‹ì„ ì§€ì •í•  ë•Œ ì‚¬ìš©í•œë‹¤.
+	private Date regdate; // regdateì˜ ê°’ì€ yyyy-MM-ddì´ í˜•íƒœë¡œ ë‚˜íƒ€ë‚´ì£¼ê¸° ìœ„í•´ ì‚¬ìš©
+	private int bnum;  // boardí…Œì´ë¸”ê³¼ ì—°ê´€ ì™¸ë˜í‚¤
 }

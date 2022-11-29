@@ -11,39 +11,51 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.myboard.dto.BoardDTO;
+import com.myboard.dto.FileBoardDTO;
+
+
 
 public interface BoardMapper {
 
-	// Ãß°¡(numÀº auto increment·Î ÁÖ¾ú±â¶§¹®¿¡ »ğÀÔÀ» ÇÏ¸é °ªÀÌ ÀÚµ¿À¸·Î µé¾î°¨)
+	// ì¶”ê°€(numì€ auto incrementë¡œ ì£¼ì—ˆê¸°ë•Œë¬¸ì— ì‚½ì…ì„ í•˜ë©´ ê°’ì´ ìë™ìœ¼ë¡œ ë“¤ì–´ê°)
 	@Insert("insert into board(title,writer,content) values(#{title},#{writer},#{content})")
 	public void insert(BoardDTO board);
 	
-	// ÀüÃ¼º¸±â
+	// ì „ì²´ë³´ê¸°
 	//@Select("select * from board")
 	public List<BoardDTO> list(HashMap<String, Object> hm);
 	
-	// °³¼ö
+	// ê°œìˆ˜
 	//@Select("select count(*) from board")
 	public int count(HashMap<String, Object> hm);
 	
-	// »ó¼¼º¸±â
+	// ìƒì„¸ë³´ê¸°
 	@Select("select * from board where num=#{num}")
 	public BoardDTO view(int num);
 	
-	// »èÁ¦
+	// ì‚­ì œ
 	@Delete("delete from board where num=#{num}")
 	public void delete(int num);
 	
-	// ¼öÁ¤
+	// ìˆ˜ì •
 	//@Update("update board set title=#{title}, writer=#{writer}, content=#{content} where num=#{num}")
 	public void update(BoardDTO board);
 	
-	//´ñ±Û ¼ö Áõ°¨
-	// @Param : ¸Å°³º¯¼ö¸¦ ÀÇ¹Ì -> ÀÌ°ÍÀ» »ç¿ëÇÏÁö ¾ÊÀ» °Í °°À¸¸é HashMapÀ» »ç¿ë
-	public void updateReplyCnt(@Param("bnum") int bnum, @Param("amount") int amount);  // ´ëÀÀµÇ¾îÁö´Â ÀÌ¸§À¸·Î ½áÁà¾ßÇÔ.
+	//ëŒ“ê¸€ ìˆ˜ ì¦ê°
+	// @Param : ë§¤ê°œë³€ìˆ˜ë¥¼ ì˜ë¯¸ -> ì´ê²ƒì„ ì‚¬ìš©í•˜ì§€ ì•Šì„ ê²ƒ ê°™ìœ¼ë©´ HashMapì„ ì‚¬ìš©
+	public void updateReplyCnt(@Param("bnum") int bnum, @Param("amount") int amount);  // ëŒ€ì‘ë˜ì–´ì§€ëŠ” ì´ë¦„ìœ¼ë¡œ ì¨ì¤˜ì•¼í•¨.
 	
-	// Á¶È¸¼ö
+	// ì¡°íšŒìˆ˜
 	@Update("update board set hitcount=hitcount+1 where num=#{num}")
 	public void upReadCount(int num);
+	
+	// íŒŒì¼ ì—…ë¡œë“œ ì¶”ê°€
+	// #{fileImage} : Getterë¡œ ë¶ˆëŸ¬ì˜¤ê¸° ë•Œë¬¸ì— DTOì™€ ê°™ì€ ì´ë¦„ìœ¼ë¡œ í•´ì¤˜ì•¼í•¨
+	@Insert("insert into fileboard(title,writer,content,fileimage) values(#{title},#{writer},#{content},#{fileImage})")
+	public void fileInsert(FileBoardDTO fboard);
+	
+	// íŒŒì¼ ë¦¬ìŠ¤íŠ¸
+	@Select("select * from fileboard")
+	public List<FileBoardDTO> fileList();
 
 }

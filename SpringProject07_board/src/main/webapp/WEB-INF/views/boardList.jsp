@@ -21,9 +21,9 @@
 			</tr>
 		</thead>
 	<tbody>
-	<c:forEach items="${board}" var="board">
+	<c:forEach items="${board}" var="board" varStatus="st">
 		<tr>
-			<td>${board.num}</td>
+			<td>${rowNo-st.index}</td>
 			<td><a href="view/${board.num}">${board.title}[${board.replyCnt}]</a></td>
 			<td>${board.writer}</td>
 			<td><fmt:formatDate value="${board.regdate}" pattern="yyyy-MM-dd"/></td>
@@ -38,7 +38,9 @@
  <ul class="pagination mt-3">
  	<!-- 이전 -->
  	<c:if test="${p.startPage > p.blockPage}">
- 		<li class="page-item"><a class="page-link" href="list?PageNum=${p.startPage-p.blockPage}">Previous</a></li>
+ 		<li class="page-item"><a class="page-link" href="list?PageNum=${p.startPage-p.blockPage}&field=${p.field}&word=${p.word}">Previous</a></li>
+ 		<!-- param으로도 값을 받아 올 수 있음(jstl을 사용하면) -->
+ 		<!-- <li class="page-item"><a class="page-link" href="list?PageNum=${p.startPage-p.blockPage}&field=${param.field}&word=${param.word}">Previous</a></li> -->
  	</c:if>
     
     <!-- 페이지 -->
@@ -47,13 +49,13 @@
 	    	<li class="page-item active"><a class="page-link" href="#">${i}</a></li>
 	    </c:if>
 	     <c:if test="${p.currentPage!=i}">
-	    	<li class="page-item"><a class="page-link" href="list?PageNum=${i}">${i}</a></li>
+	    	<li class="page-item"><a class="page-link" href="list?PageNum=${i}&field=${p.field}&word=${p.word}">${i}</a></li>
 	    </c:if>
     </c:forEach>
     
     <!-- 다음 -->
     <c:if test="${p.endPage < p.totPage}">
-    	<li class="page-item"><a class="page-link" href="list?PageNum=${p.endPage+1}">Next</a></li>
+    	<li class="page-item"><a class="page-link" href="list?PageNum=${p.endPage+1}&field=${p.field}&word=${p.word}">Next</a></li>
     </c:if>
   </ul>
 
@@ -62,11 +64,18 @@
 				<option value="writer">작성자</option>
 				<option value="content">내용</option>
 			</select>
+			<script>
+				$("#field option").each(function(){  // 내용으로 검색하면 작성자로 돌아가지 않고 내용이 뜨게 함.
+					if($(this).val()=="${p.field}"){
+						$(this).prop("selected",true)
+					}
+				})
+				
+			</script>
 			<input type="text" name="word" id="word" class="form-control" placeholder="Search">  
 			<button class="btn btn-secondary">Search</button>
 	</form>
 </div>
-
 </div>
 
 <%@include file="includes/footer.jsp" %>

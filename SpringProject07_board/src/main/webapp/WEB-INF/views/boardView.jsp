@@ -12,6 +12,7 @@
 
 <div class = "container">
 <input type="hidden" name="num" id="num" value="${board.num}"> <!-- num값을 넘겨줘야함. -->
+
 	<table class="table">
 	<tr>
 		<th>번호</th>
@@ -35,13 +36,16 @@
 		<th>글내용</th>
 		<td colspan="3">${board.content}</td>
 	<tr>
-	<tr>
-		<td colspan="4">
-			<button type="button" class="btn btn-primary" id="btnUpdate">수정</button>
-			<button type="button" class="btn btn-primary" id="btnDelete">삭제</button>
-			<a href="/app07/delete/${board.num}">삭제</a>
-		</td>
-	</tr>
+	<!-- 작성자가 로그인하면 수정,삭제 버튼이 보임 -->
+	<c:if test="${sessionScope.sMember.id == board.writer}">
+		<tr>
+			<td colspan="4">
+				<button type="button" class="btn btn-primary" id="btnUpdate">수정</button>
+				<button type="button" class="btn btn-primary" id="btnDelete">삭제</button>
+				<a href="/app07/delete/${board.num}">삭제</a>
+			</td>
+		</tr>
+	</c:if>
 	</table>
 	
 	<br>
@@ -66,10 +70,16 @@ var init = function(){
 	.done(function(resp){
 		var str = "";
 		$.each(resp, function(key,val){
-			str += val.userid+" "
-			str += val.content+" "
-			str += val.regdate+" "
-			str += "<a href='javascript:fdel("+val.cnum+")'>삭제</a><br/>"
+		
+				str += val.userid+" "
+				str += val.content+" "
+				str += val.regdate+" "
+				if("${sessionScope.sMember.id}"==val.userid) {
+					str += "<a href='javascript:fdel("+val.cnum+")'>삭제</a><br/>"
+				}
+				str+="<br/>"
+				
+				
 		})  // each
 		$("#replyResult").html(str);
 	})  // done
@@ -95,9 +105,15 @@ function fdel(cnum) {
 
 // 댓글쓰기
 $("#btnComment").click(function(){
+	if(${empty sessionScope.sMember}){
+		alert("로그인하세요")
+		location.href="/app07/member/login"
+		return;
+	}
+	
 	if($("#msg").val()==""){
 		alert("댓글 입력하세요");
-		return;
+		return false;
 	}
 	data = {
 			"bnum": $("#num").val(),  // num의 값을 bnum에 담음

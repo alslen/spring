@@ -2,6 +2,8 @@ package com.board.app07;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,42 +17,45 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myboard.dto.CommentDTO;
+import com.myboard.dto.MemberDTO;
 import com.myboard.model.CommentService;
 
 
 
-@RequestMapping("/reply/*")  // ÄÁÆ®·Ñ·¯¿¡ ÀüÃ¼ÀûÀ¸·Î Àû¿ëµÇ´Â °ÍÀº @RequestMappingÀ» À§¿¡ Àû´Â´Ù.
+@RequestMapping("/reply/*")  // ì»¨íŠ¸ë¡¤ëŸ¬ì— ì „ì²´ì ìœ¼ë¡œ ì ìš©ë˜ëŠ” ê²ƒì€ @RequestMappingì„ ì‚¬ìš©í•¨(ì „ì²´ì ìœ¼ë¡œ ì ìš©í•˜ê¸° ìœ„í•´ì„œ ìœ„ë¡œ ì˜¬ë¦¼)
 //@Controller
-@RestController  // @Controller + @ResponseBody -> @ResponseBodyÀ¸·Î ´Ù ¹Ş¾ÆÁø´Ù¸é @RestController·Î ¸¸µé¾îÁÖ¸é µÊ
+@RestController  // @Controller + @ResponseBody -> @ResponseBodyìœ¼ë¡œ ë‹¤ ë°›ì•„ì§„ë‹¤ë©´ @RestControllerë¡œ ë§Œë“¤ì–´ì£¼ë©´ ë¨
 public class CommentController {
 
 	@Autowired
 	private CommentService cservice;
 	
-	// ´ñ±ÛÃß°¡
+	// ëŒ“ê¸€ì¶”ê°€
 	@PostMapping("commentInsert")
-	//@ResponseBody  // ¹®ÀÚ¿­À» ¸®ÅÏÇØÁÖ±â À§ÇØ¼­ »ç¿ë
-	public String insert(@RequestBody CommentDTO comment) {  // @RequestBody : Á¦ÀÌ½¼ ÇüÅÂ·Î °ªÀ» ¹Ş±â ¶§¹®¿¡ »ç¿ë
+	//@ResponseBody // ë¬¸ìì—´ì„ ë¦¬í„´í•´ì£¼ê¸° ìœ„í•´ì„œ ì‚¬ìš©
+	public String insert(@RequestBody CommentDTO comment, HttpSession session) { // @RequestBody : ì œì´ìŠ¨ í˜•íƒœë¡œ ê°’ì„ ë°›ê¸° ë•Œë¬¸ì— ì‚¬ìš©
+		String id = ((MemberDTO)session.getAttribute("sMember")).getId();
+		comment.setUserid(id);
 		cservice.insert(comment);
 		return "success";
-	}
+		}
 	
-//	// ´ñ±Û ÀüÃ¼º¸±â
+//	// ëŒ“ê¸€ ì „ì²´ë³´ê¸°
 //	@GetMapping("commentList")
-//	//@ResponseBody   // Àü´ŞÇÏ´Â °ªÀÌ view°¡ ¾Æ´Ï±â ¶§¹®¿¡ ¹İµå½Ã Àû¾îÁà¾ßÇÔ.
-//	public List<CommentDTO> getList(int bnum) {  // Á¦ÀÌ½¼ ÇüÅÂÀÇ ¹®ÀÚ¿­·Î ÀÎ½ÄÇÔ.
-//		return cservice.getList(bnum);  // Äİ¹éµÊ.
+//	//@ResponseBody   // ì „ë‹¬í•˜ëŠ” ê°’ì´ viewê°€ ì•„ë‹ˆê¸° ë•Œë¬¸ì— ë°˜ë“œì‹œ ì ì–´ì¤˜ì•¼í•¨.
+//	public List<CommentDTO> getList(int bnum) {  // ì œì´ìŠ¨ í˜•íƒœì˜ ë¬¸ìì—´ë¡œ ì¸ì‹í•¨.
+//		return cservice.getList(bnum);  // ì½œë°±ë¨.
 //	}
 	
 	@GetMapping("commentList/{bnum}") 
-	public List<CommentDTO> getList(@PathVariable int bnum){  // @PathVariable: bnumÀÇ °ªÀ» ¹Ş¾Æ¿À±â À§ÇØ »ç¿ë
+	public List<CommentDTO> getList(@PathVariable int bnum){  // @PathVariable: bnumì˜ ê°’ì„ ë°›ì•„ì˜¤ê¸° ìœ„í•´ ì‚¬ìš©
 		return cservice.getList(bnum);
 	}
 	
-	// ´ñ±Û»èÁ¦
+	// ëŒ“ê¸€ì‚­ì œ
 	@DeleteMapping("delete/{cnum}")
-	public int delete(@PathVariable int cnum) {
+	public int delete(@PathVariable int cnum, HttpSession session) {
 		cservice.delete(cnum);
-		return cnum;  // ´ñ±Û¹øÈ£¸¦ ¹İÈ¯ÇÏ±â À§ÇØ¼­ ¹İÈ¯ÇüÀ» int·Î ÇßÀ½.
+		return cnum;   // ëŒ“ê¸€ë²ˆí˜¸ë¥¼ ë°˜í™˜í•˜ê¸° ìœ„í•´ì„œ ë°˜í™˜í˜•ì„ intë¡œ í–ˆìŒ.
 	}
 }

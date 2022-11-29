@@ -2,11 +2,13 @@ package com.board.app07;
 
 import java.text.DateFormat;
 
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpSession;
 import javax.websocket.server.PathParam;
 
 import org.slf4j.Logger;
@@ -29,6 +31,8 @@ import com.myboard.dto.BoardDTO;
 import com.myboard.dto.pageVO;
 import com.myboard.model.BoardService;
 
+
+
 /**
  * Handles requests for the application home page.
  */
@@ -49,45 +53,53 @@ public class HomeController {
 //		return "list";
 //	}
 	
-	// Ãß°¡
+	// ì¶”ê°€
 	@PostMapping("insert")
 	public String insert(BoardDTO board) {
 		bservice.insert(board);
 		return "redirect:list";
 	}
 	
-	// ÀüÃ¼º¸±â
-	// @RequestParamÀÇ required°¡ trueÀÌ±â ¶§¹®¿¡ °ªÀÌ ¹«Á¶°Ç ¿Í¾ßÇÔ. ÇÏÁö¸¸ °Ë»öÀ» ÇÏÁö ¾ÊÀ¸¸é °ªÀÌ null°ªÀÌ µé¾î¿À±â ¶§¹®¿¡ defaultValueÀÇ °ªÀ¸·Î °ø¹éÀ» ÁáÀ½.
+	// ì „ì²´ë³´ê¸°
+	// @RequestParamì˜ requiredê°€ trueì´ê¸° ë•Œë¬¸ì— ê°’ì´ ë¬´ì¡°ê±´ ì™€ì•¼í•¨. í•˜ì§€ë§Œ ê²€ìƒ‰ì„ í•˜ì§€ ì•Šìœ¼ë©´ ê°’ì´ nullê°’ì´ ë“¤ì–´ì˜¤ê¸° ë•Œë¬¸ì— defaultValueì˜ ê°’ìœ¼ë¡œ ê³µë°±ì„ ì¤¬ìŒ.
 	@GetMapping({"/","list"})
 	public String list(Model model, @RequestParam(name="field", defaultValue = "") String field, @RequestParam(name="word", defaultValue = "") String word, String PageNum) {
-		int currentPage=PageNum==null?1:Integer.parseInt(PageNum);  // ÇöÀç ÆäÀÌÁö
-		int pageSize = 5;  // ÇÑ È­¸é¿¡ º¸¿©Áö´Â °Ô½Ã±Û ¼ö
+		int currentPage=PageNum==null?1:Integer.parseInt(PageNum);   // í˜„ì¬ í˜ì´ì§€
+		int pageSize = 5;  // í•œ í™”ë©´ì— ë³´ì—¬ì§€ëŠ” ê²Œì‹œê¸€ ìˆ˜
 		
-		//ObjectÀ¸·Î ÇÑ ÀÌÀ¯´Â String°ú intÇüÀ» ¾Æ¿ì¸¦ ¼ö ÀÖ´Â ÇüÀÌ±â ¶§¹®¿¡
+		//Objectìœ¼ë¡œ í•œ ì´ìœ ëŠ” Stringê³¼ intí˜•ì„ ì•„ìš°ë¥¼ ìˆ˜ ìˆëŠ” í˜•ì´ê¸° ë•Œë¬¸ì—
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		hm.put("field", field);
 		hm.put("word", word);
-		hm.put("pageStart", (currentPage-1)*pageSize);  // ¸î¹øÂ° ÆäÀÌÁöÀÇ Ã¹¹øÂ° °Ô½Ã¹°ÀÇ ¼ıÀÚ¸¦ ±¸ÇÔ
-		hm.put("pageSize", pageSize);   // ÇÑ È­¸é¿¡ ³ª¿À´Â °Ô½Ã¹° ¼ö
+		hm.put("pageStart", (currentPage-1)*pageSize);  // ëª‡ë²ˆì§¸ í˜ì´ì§€ì˜ ì²«ë²ˆì§¸ ê²Œì‹œë¬¼ì˜ ìˆ«ìë¥¼ êµ¬í•¨
+		hm.put("pageSize", pageSize);    // í•œ í™”ë©´ì— ë‚˜ì˜¤ëŠ” ê²Œì‹œë¬¼ ìˆ˜
 		
 		List<BoardDTO> board = bservice.findeAll(hm); 
 		int count = bservice.getCount(hm);
-		pageVO page = new pageVO(count, currentPage, pageSize);
-		
+		pageVO page = new pageVO(count, currentPage, pageSize); 
+		page.setField(field);
+		page.setWord(word);
+	
+		model.addAttribute("rowNo", count-(currentPage-1)*pageSize);
 		model.addAttribute("board", board);
 		model.addAttribute("count", count);
 		model.addAttribute("p", page);
+	//	model.addAttribute("field", field);
+	//	model.addAttribute("word", word);
 		
 		return "boardList";
 	}
 	
 	
 	@GetMapping("insert")
-	public String insert() {
+	public String insert(HttpSession session) {
+		if(session.getAttribute("sMember")==null) {
+			return "member/login";
+		}
 		return "boardInsert";
 	}
 	
-	// »ó¼¼º¸±â
+	// ìƒì„¸ë³´ê¸°
 	@GetMapping("view/{num}")
 	public String view(@PathVariable int num, Model model) {
 		BoardDTO board = bservice.findByNum(num);
@@ -102,15 +114,15 @@ public class HomeController {
 //	}
 //	
 	
-	// »èÁ¦
-	@DeleteMapping("delete/{num}")  // @DeleteMappingÀ¸·Î ÇØÁà¾ßÇÔ
+	// ì‚­ì œ
+	@DeleteMapping("delete/{num}")   // @DeleteMappingìœ¼ë¡œ í•´ì¤˜ì•¼í•¨
 	@ResponseBody
 	public String delete(@PathVariable int num) {
 		bservice.delete(num);
 		return "success";
 	}
 	
-	// ¼öÁ¤Æû
+	// ìˆ˜ì •í¼
 	@GetMapping("update/{num}")
 	public String update(@PathVariable int num, Model model) {
 		BoardDTO board = bservice.findByNum(num);
@@ -118,17 +130,17 @@ public class HomeController {
 		return "/update";
 	}
 	
-//	// ¼öÁ¤
+//	//ìˆ˜ì •
 //	@PostMapping("update")
 //	public String update(BoardDTO board) {
 //		bservice.update(board);
 //		return "redirect:/list";
 //	}
 	
-	// ¼öÁ¤
-	@PutMapping("update")  // put¹æ½ÄÀ¸·Î ³Ñ±â±â ¶§¹®¿¡ @PutMappingÀ» »ç¿ë
-	@ResponseBody  // ¸®ÅÏÀ» ¹®ÀÚ¿­·Î ÇÏ±â À§ÇØ »ç¿ëÇÔ
-	public String update(@RequestBody BoardDTO board) {  // @RequestBody : JSONÇüÅÂÀÇ °ªÀ» ¹Ş¾Æ¿À±â À§ÇØ¼­ »ç¿ë
+	// ìˆ˜ì •
+	@PutMapping("update")  // putë°©ì‹ìœ¼ë¡œ ë„˜ê¸°ê¸° ë•Œë¬¸ì— @PutMappingì„ ì‚¬ìš©
+	@ResponseBody  // ë¦¬í„´ì„ ë¬¸ìì—´ë¡œ í•˜ê¸° ìœ„í•´ ì‚¬ìš©í•¨
+	public String update(@RequestBody BoardDTO board) {  // @RequestBody : JSONí˜•íƒœì˜ ê°’ì„ ë°›ì•„ì˜¤ê¸° ìœ„í•´ì„œ ì‚¬ìš©
 		bservice.update(board);
 		return "success";
 	}

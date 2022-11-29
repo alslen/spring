@@ -1,24 +1,27 @@
 package com.myboard.dto;
 
 import lombok.Getter;
+
 import lombok.Setter;
 
+
+
 @Getter @Setter
-public class pageVO {  // º¸Åë »ç¿ëÀÚ°¡ °ªÀ» Àü´ŞÇÒ¶§´Â ÇÔ¼öÀÌ¸§¿¡ VO¸¦ »ç¿ëÇÔ
-	private int totPage;  // ÀüÃ¼ÆäÀÌÁö
-	private int blockPage;  // ÆäÀÌÂ¡ °³¼ö
+public class pageVO {  /// ë³´í†µ ì‚¬ìš©ìê°€ ê°’ì„ ì „ë‹¬í• ë•ŒëŠ” í•¨ìˆ˜ì´ë¦„ì— VOë¥¼ ì‚¬ìš©í•¨
+	private int totPage; // ì „ì²´í˜ì´ì§€
+	private int blockPage;  // í˜ì´ì§• ê°œìˆ˜
 	private int startPage; 
 	private int endPage;
-	private int currentPage;
+	private int currentPage;  // í˜„ì¬í˜ì´ì§€
 	private String field;
 	private String word;
 	
 	public pageVO(int count, int currentPage, int pageSize) {
 		totPage = count/pageSize + (count%pageSize==0?0:1);
-		blockPage = 3;  // [ÀÌÀü]4 5 6[´ÙÀ½]
+		blockPage = 3;  // [ì´ì „]4 5 6[ë‹¤ìŒ]
 		startPage = ((currentPage-1)/blockPage)*blockPage+1;
-		endPage = startPage+blockPage-1;  // °è»ê»ó ¸¶Áö¸· ÆäÀÌÁö
-		if(endPage>totPage) endPage = totPage;  // totPage ½ÇÁ¦ ¸¶Áö¸·ÆäÀÌÁö
+		endPage = startPage+blockPage-1;  // ê³„ì‚°ìƒ ë§ˆì§€ë§‰ í˜ì´ì§€
+		if(endPage>totPage) endPage = totPage;  // totPage ì‹¤ì œ ë§ˆì§€ë§‰í˜ì´ì§€
 		
 		setBlockPage(blockPage);
 		setCurrentPage(currentPage);

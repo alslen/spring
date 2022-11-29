@@ -4,13 +4,15 @@ import java.util.List;
 
 import com.myboard.dto.CommentDTO;
 
+
+
 public interface CommentService {
 
-	// Ãß°¡
+	// ëŒ“ê¸€ ì¶”ê°€
 	public void insert(CommentDTO comment);
-	// ÀüÃ¼º¸±â
+	// ëŒ“ê¸€ ì „ì²´ë³´ê¸°
 	public List<CommentDTO> getList(int bnum);
-	// »èÁ¦
+	// ëŒ“ê¸€ ì‚­ì œ
 	public void delete(int cnum);
 	
 }

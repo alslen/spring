@@ -6,7 +6,7 @@
  <mapper namespace="com.myboard.mapper.CommentMapper">
  <!-- 댓글 추가 -->
  	<insert id="insert">
- 		insert into commentboard(userid,content,regdate,bnum) values('aa',#{content},now(),#{bnum})
+ 		insert into commentboard(userid,content,regdate,bnum) values(#{userid},#{content},now(),#{bnum})
  	</insert>
  	
  <!-- 댓글 전체보기 -->

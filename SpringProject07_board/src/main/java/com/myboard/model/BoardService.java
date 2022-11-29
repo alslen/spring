@@ -1,21 +1,30 @@
 package com.myboard.model;
 
 import java.util.HashMap;
+
 import java.util.List;
 
 import com.myboard.dto.BoardDTO;
+import com.myboard.dto.FileBoardDTO;
+
+
 
 public interface BoardService {
-	// Ãß°¡
+	// ì¶”ê°€
 	public void insert(BoardDTO board);
-	// ÀüÃ¼º¸±â
+	// ì „ì²´ë³´ê¸°
 	public List<BoardDTO> findeAll(HashMap<String, Object> hm);
-	// »ó¼¼º¸±â
+	// ìƒì„¸ë³´ê¸°
 	public BoardDTO findByNum(int num);
-	// ¼öÁ¤
+	// ìˆ˜ì •
 	public void update(BoardDTO board);
-	// »èÁ¦
+	// ì‚­ì œ
 	public void delete(int num);
-	// °³¼ö
+	// ê°œìˆ˜
 	public int getCount(HashMap<String, Object> hm);
+	
+	// íŒŒì¼ ì—…ë¡œë“œ ì¶”ê°€
+	public void fileInsert(FileBoardDTO board);
+	// íŒŒì¼ ë¦¬ìŠ¤íŠ¸
+	public List<FileBoardDTO> fileList();
 }
