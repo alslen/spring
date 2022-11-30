@@ -48,7 +48,7 @@ public class BoardServiceImpl implements BoardService{
 
 	public List<FileBoardDTO> fileList() {
 	
-		return null;
+		return brepository.dao_fileList();
 	}
 	
 	

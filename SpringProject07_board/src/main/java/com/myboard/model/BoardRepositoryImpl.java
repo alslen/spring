@@ -52,7 +52,7 @@ public class BoardRepositoryImpl implements BoardRepository{
 
 	public List<FileBoardDTO> dao_fileList() {
 		
-		return null;
+		return bmapper.fileList();
 	}
 	
 	

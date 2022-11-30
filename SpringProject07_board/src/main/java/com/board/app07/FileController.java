@@ -3,6 +3,7 @@ package com.board.app07;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
@@ -63,7 +64,7 @@ public class FileController {
 	@PostMapping("fileInsert")
 	public String fileInsert(FileBoardDTO fboard, HttpSession session) { // HttpSession을 사용하는 이유는 파일 위치를 가져오기 위해
 		// session.getServletContext().getRealPath("/") : webapp를 알려줌(프로젝트 안에서 폴더이동 가능)
-		String uploadFolder = session.getServletContext().getRealPath("/") + "\\resources\\img";  
+		String uploadFolder = session.getServletContext().getRealPath("/") + "\\resources\\img";   // img 폴더를 만들어줘야함.
 		//System.out.println("uploadFolder:"+uploadFolder);
 		
 		UUID uuid = UUID.randomUUID();  // 난수를 만듦(파일명의 중복을 피하고 싶어서)
@@ -74,8 +75,8 @@ public class FileController {
 			File file = new File(uploadFolder, uploadFileName);  // 파일 객체 생성
 			
 			try {
-				f.transferTo(file); // 파일업로드
-				fboard.setFileImage(uploadFileName); // DB에 들어갈 파일 이름.
+				f.transferTo(file); // 파일업로드(file에 업로드 시킴)
+				fboard.setFileImage(uploadFileName); // 파일이름만 DB에 등록시킴
 			} catch (IllegalStateException e) {
 				
 				e.printStackTrace();
@@ -84,11 +85,13 @@ public class FileController {
 				e.printStackTrace();
 			}
 		}
-		bservice.fileInsert(fboard);
+		bservice.fileInsert(fboard); 
 		return "redirect:fileList";
 	}
 	@GetMapping("fileList")
-	public String fileList() {
-		return null;
+	public String fileList(Model model) {
+		List<FileBoardDTO> flists = bservice.fileList();
+		model.addAttribute("files",flists);
+		return "fileList";
 	}
 }
