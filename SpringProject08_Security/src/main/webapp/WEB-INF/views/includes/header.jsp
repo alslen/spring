@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
  <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+ <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %> <!-- security를 사용하기 위해 taglib를 사용함. -->
+ 
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,51 +16,38 @@
   <script src="https://code.jquery.com/jquery-3.6.1.js"></script>
 </head>
 <body>
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+
+<nav class="navbar navbar-expand-sm bg-success navbar-dark">
 <div class="container">
   <!-- Brand/logo -->
-  <a class="navbar-brand" href="/app07/">HOME</a>
+  <a class="navbar-brand" href="/app08/">HOME</a>
   
   <!-- Links -->
   <ul class="navbar-nav mr-auto">
     <li class="nav-item">
-      <a class="nav-link" href="/app07/insert">글쓰기</a>
+      <a class="nav-link" href="/app08/board/insert">글쓰기</a>
     </li>
-     <li class="nav-item">
-      <a class="nav-link" href="/app07/uploadFile">File</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/app07/fileInsert">FileBoardWriter</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/app07/fileList">FileBoard</a>
-    </li>
+    <sec:authorize access="hasRole('ROLE_ADMIN')">
+	    <li class="nav-item">
+	      <a class="nav-link" href="#">Product</a>
+	    </li>
+    </sec:authorize>
   </ul>
   
-  <!-- Links -->
-  <ul class="navbar-nav">
-  <c:choose>
-  
-  	<c:when test="${empty sessionScope.sMember}">
-  	 <li class="nav-item">
-      <a class="nav-link" href="/app07/member/join">회원가입</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="/app07/member/login">로그인</a>
-    </li>
-  	</c:when>
-  	
-  	<c:otherwise>
-  		<li class="nav-item">
-      <a class="nav-link" href="/app07/member/update">회원변경</a>
-    </li>
-     <li class="nav-item">
-      <a class="nav-link" href="/app07/member/logout">로그아웃(${sessionScope.sMember.getId()})</a>
-    </li>
-  	</c:otherwise>
-  	
-  </c:choose>
-  </ul>
+  <sec:authentication property="principal" var="pinfo"/> <!-- principal은 ContextHolder안에 있는 값들을 총징함 -->
+   <ul class="navbar-nav">
+   <sec:authorize access="isAnonymous()">  <!-- 접근권한 : 누구나 -->
+	    <li class="nav-item">
+	      <a class="nav-link" href="/app08/customLogin">로그인</a>
+	    </li>
+    </sec:authorize>
+    <sec:authorize access="isAuthenticated()"> <!-- 접근권한 : ContextHolder안에 있으면 -->
+	     <li class="nav-item">
+	      <a class="nav-link" href="/app08/customLogout">로그아웃(${pinfo.username})</a>
+	      <!-- 로그아웃(<sec:authentication property="principal.username"/>) : 둘 다 같은 결과가 출력됨.-->
+	    </li>
+    </sec:authorize>
+    </ul>
   
  </div>
 </nav>

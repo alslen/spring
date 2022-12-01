@@ -15,5 +15,6 @@
 		<p>사용자ID : <sec:authentication property="principal.member.userid"/></p>
 		<p>사용자ID(username) : <sec:authentication property="principal.username"/></p> <!-- principal을 가지는 username은 우리가 만든 userid가 됨 -->
 		<p>권한 : <sec:authentication property="principal.member.authList"/></p>
+	<a href="/app08/cutomLogout">로그아웃</a>
 </body>
 </html>

@@ -15,8 +15,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 public class CustomLoginSuccess implements AuthenticationSuccessHandler{
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	@Autowired  // 객체형이 같으면 주입된다.
+	private PasswordEncoder passwordEncoder;  // PasswordEncoder(부모)와 BCryptPasswordEncoder(자식)은 상속관계에 있음
 	
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -27,5 +27,6 @@ public class CustomLoginSuccess implements AuthenticationSuccessHandler{
 		List<String> roleNames = new ArrayList();
 		authentication.getAuthorities().forEach(authority -> roleNames.add(authority.getAuthority()));
 		System.out.println("roleNames : "+roleNames);
+		response.sendRedirect("/app08/board/list");
 	}
 }
