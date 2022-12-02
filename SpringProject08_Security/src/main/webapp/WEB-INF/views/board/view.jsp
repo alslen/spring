@@ -52,6 +52,12 @@
 	</div>
 	<hr/>
 	<div id="replyResult"></div>
+	
+	<!--어떤 권한이건 상관없이 인증이 되었다면 vaule값을 가짐.-->
+	<sec:authorize access="isAuthenticated()">
+	 	<!--인증시 사용된 객체에 대한 username을 구해옴.-->
+		<input type="hidden" id="prin" name="prin" value="<sec:authentication property="principal.username"/>"/> 
+	</sec:authorize>
 	<sec:authorize access="isAnonymous()">
 		<input type="hidden" id="prin" name="prin" value="null">
 	</sec:authorize>
@@ -87,11 +93,14 @@ var init = function(){
 			str += val.userid+" "
 			str += val.content+" "
 			str += val.regdate+" "
-			<sec:authorize access="isAuthenticated()">
+			/*<sec:authorize access="isAuthenticated()">
 			if("${pinfo.username}"==val.userid){
 				str += "<a href='javascript:fdel("+val.cnum+")'>삭제</a>"
 			}
-			</sec:authorize>
+			</sec:authorize> */
+			if($("#prin").val()==val.userid){
+				str += "<a href='javascript:fdel("+val.cnum+")'>삭제</a>"
+			}
 			str += "<br/>"
 			
 		})
@@ -143,9 +152,10 @@ var init = function(){
 		dataStr={
 				"bnum" : $("#num").val(),
 				"content" : $("#msg").val(),
-				<sec:authorize access="isAuthenticated()">
+				"userid" : $("#prin").val()
+			/*	<sec:authorize access="isAuthenticated()">
 				"userid" : "${pinfo.username}"
-				</sec:authorize>
+				</sec:authorize> */
 		};
 		$.ajax({  // commentInsert
 			type:'post',

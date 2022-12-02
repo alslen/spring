@@ -33,10 +33,11 @@ public class CommentService {
 		return cmapper.getCount(bnum);
 	}
 	
-	@Transactional
+	// 삭제
+	@Transactional  // 일련의 작업으로 구성되어야하기 때문에 꼭 써줘야함.
 	public void delete(int cnum) {
-//		CommentDTO comment = cmapper.read(cnum);
-//		bmapper.updateReplyCnt(comment.getBnum(), -1);
+		CommentDTO comment = cmapper.read(cnum);
+		bmapper.updateReplyCnt(comment.getBnum(), -1);  // 댓글을 감소시키지 위해 
 		cmapper.delete(cnum);
 	}
 }

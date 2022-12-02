@@ -45,6 +45,7 @@ public class CommentController {
 		return cvo;  // 리턴값을 무조건 하나만 넘겨줘야함. -> Map으로 만들어주어도 괜찮음.
 	}
 	
+	// 댓글삭제
 	@DeleteMapping("commentDelete/{cnum}")
 	public int delete(@PathVariable int cnum) {
 		cservice.delete(cnum);

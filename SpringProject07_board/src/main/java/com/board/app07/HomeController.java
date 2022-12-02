@@ -60,6 +60,14 @@ public class HomeController {
 		return "redirect:list";
 	}
 	
+	@GetMapping("insert")
+	public String insert(HttpSession session) {
+		if(session.getAttribute("sMember")==null) {
+			return "member/login";
+		}
+		return "boardInsert";
+	}
+	
 	// 전체보기
 	// @RequestParam의 required가 true이기 때문에 값이 무조건 와야함. 하지만 검색을 하지 않으면 값이 null값이 들어오기 때문에 defaultValue의 값으로 공백을 줬음.
 	@GetMapping({"/","list"})
@@ -76,6 +84,7 @@ public class HomeController {
 		
 		List<BoardDTO> board = bservice.findeAll(hm); 
 		int count = bservice.getCount(hm);
+		
 		pageVO page = new pageVO(count, currentPage, pageSize); 
 		page.setField(field);
 		page.setWord(word);
@@ -88,15 +97,6 @@ public class HomeController {
 	//	model.addAttribute("word", word);
 		
 		return "boardList";
-	}
-	
-	
-	@GetMapping("insert")
-	public String insert(HttpSession session) {
-		if(session.getAttribute("sMember")==null) {
-			return "member/login";
-		}
-		return "boardInsert";
 	}
 	
 	// 상세보기

@@ -19,7 +19,7 @@
     
      <div class="form-group">
       	<label for="subject">writer:</label>
-      	<input type="text" class="form-control" id="writer" placeholder="Enter writer" name="writer">
+      	<input type="text" class="form-control" id="writer" placeholder="Enter writer" name="writer" readonly="readonly" value="<sec:authentication property="principal.username"/>">
     </div>
     
      <div class="form-group">

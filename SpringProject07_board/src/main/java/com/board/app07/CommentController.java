@@ -47,6 +47,7 @@ public class CommentController {
 //		return cservice.getList(bnum);  // 콜백됨.
 //	}
 	
+	// 댓글 전체보기
 	@GetMapping("commentList/{bnum}") 
 	public List<CommentDTO> getList(@PathVariable int bnum){  // @PathVariable: bnum의 값을 받아오기 위해 사용
 		return cservice.getList(bnum);
@@ -54,7 +55,7 @@ public class CommentController {
 	
 	// 댓글삭제
 	@DeleteMapping("delete/{cnum}")
-	public int delete(@PathVariable int cnum, HttpSession session) {
+	public int delete(@PathVariable int cnum) {
 		cservice.delete(cnum);
 		return cnum;   // 댓글번호를 반환하기 위해서 반환형을 int로 했음.
 	}
